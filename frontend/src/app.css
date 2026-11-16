@@ -1,0 +1,532 @@
+@import 'tailwindcss';
+
+
+@theme {
+    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Bricolage Grotesque', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Colors, fonts and the dark/light switch.
+ * The theme is toggled by <html data-theme="dark|light"> (see resources/views/app.blade.php).
+ */
+@layer base {
+    :root {
+        --bg: #0d0c0a;
+        --bg2: #17150f;
+        --fg: #e9e1cf;
+        --sand: #d8c9a3;
+        --mut: #8f8873;
+        --line: rgba(216,201,163,.15);
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top,0px);
+        padding-bottom: env(safe-area-inset-bottom,0px);
+    }
+
+    [data-theme=light] {
+        --bg: #f1ebdd;
+        --bg2: #e6dec9;
+        --fg: #1b1812;
+        --sand: #6b5a2e;
+        --mut: #6f6853;
+        --line: rgba(27,24,18,.15);
+    }
+
+    html {
+        scroll-padding-top: env(safe-area-inset-top,0px);
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'DM Sans',system-ui,sans-serif;
+        transition: background .4s,color .4s;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top,0px);
+        background: var(--bg);
+        z-index: 60;
+    }
+
+    h1, h2, h3, .fd, .wm, header a[href="#home"] {
+        font-family: 'Bricolage Grotesque','DM Sans',system-ui,sans-serif;
+    }
+}
+
+/*
+ * Reusable pieces (.btn, .card, .bt ...). They live in the "components" layer on purpose,
+ * so Tailwind utilities written in the markup (hidden, lg:hidden, px-3! ...) can override them.
+ */
+@layer components {
+    .sand {
+        color: var(--sand);
+    }
+
+    .mut {
+        color: var(--mut);
+    }
+
+    .big {
+        font-weight: 600;
+        letter-spacing: -.035em;
+        line-height: .92;
+        text-transform: uppercase;
+        color: var(--sand);
+        font-size: clamp(2.6rem,9.5vw,8.5rem);
+    }
+
+    .h2 {
+        font-weight: 600;
+        letter-spacing: -.03em;
+        line-height: 1;
+        color: var(--sand);
+        font-size: clamp(2.2rem,6vw,4.8rem);
+    }
+
+    .lbl {
+        font-size: .72rem;
+        letter-spacing: .08em;
+        color: var(--mut);
+        text-transform: uppercase;
+    }
+
+    .card {
+        background: linear-gradient(160deg,var(--bg2),transparent);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+    }
+
+    .btn {
+        background: var(--sand);
+        color: var(--bg);
+        font-weight: 600;
+        font-size: .8rem;
+        padding: .8rem 1.3rem;
+        border-radius: 10px;
+        border: 1px solid var(--sand);
+        cursor: pointer;
+        display: inline-flex;
+        gap: .5rem;
+        align-items: center;
+        transition: transform .25s,opacity .25s;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        opacity: .9;
+    }
+
+    .btn2 {
+        background: transparent;
+        color: var(--sand);
+        font-weight: 600;
+        font-size: .8rem;
+        padding: .8rem 1.3rem;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        cursor: pointer;
+        display: inline-flex;
+        gap: .5rem;
+        align-items: center;
+        transition: border-color .25s;
+    }
+
+    .btn2:hover {
+        border-color: var(--sand);
+    }
+
+    .btn:disabled,
+    .btn2:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+    }
+
+    .btn:disabled:hover,
+    .btn2:disabled:hover {
+        transform: none;
+        border-color: var(--line);
+        opacity: .35;
+    }
+
+    .inp {
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .7rem .9rem;
+        color: var(--fg);
+        font: inherit;
+        font-size: .9rem;
+        width: 100%;
+    }
+
+    .inp:focus, .btn:focus-visible, .btn2:focus-visible, a:focus-visible {
+        outline: 2px solid var(--sand);
+        outline-offset: 2px;
+    }
+
+    .bt {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg,var(--bg2),transparent 80%);
+        padding: 1.6rem;
+        transition: border-color .4s,transform .5s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .bt::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(216,201,163,.15),transparent 70%);
+        opacity: 0;
+        transition: opacity .4s;
+        pointer-events: none;
+    }
+
+    .bt:hover {
+        border-color: rgba(216,201,163,.4);
+        transform: translateY(-3px);
+    }
+
+    .bt:hover::before {
+        opacity: 1;
+    }
+
+    .bt.hi {
+        background: var(--sand);
+        color: var(--bg);
+        border-color: var(--sand);
+    }
+
+    .bt.hi::before {
+        background: radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.35),transparent 70%);
+    }
+
+    .tag {
+        display: inline-block;
+        font-size: .75rem;
+        font-weight: 500;
+        padding: .4rem .8rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+    }
+
+    .chip {
+        display: inline-block;
+        min-width: 6.4em;
+        padding: .55em .75em;
+        white-space: nowrap;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg,rgba(216,201,163,.16),rgba(0,0,0,.25));
+        color: var(--fg);
+        font-size: clamp(.5rem,1.7vw,.72rem);
+        font-weight: 600;
+        letter-spacing: .03em;
+        line-height: 1.3;
+        vertical-align: middle;
+        text-transform: uppercase;
+    }
+
+    .sq {
+        display: inline-block;
+        width: .62em;
+        height: .62em;
+        background: var(--sand);
+        margin: 0 .06em;
+    }
+
+    .rv {
+        opacity: 0;
+        transform: translateY(26px);
+        filter: blur(6px);
+        transition: opacity .9s,transform .9s cubic-bezier(.2,.7,.2,1),filter .9s;
+    }
+
+    .rv.in {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+
+    .wd {
+        opacity: .14;
+        transition: opacity .6s;
+    }
+
+    .in .wd {
+        opacity: 1;
+    }
+
+    .page {
+        opacity: 0;
+        animation: pg .8s .45s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+
+    .curtain {
+        position: fixed;
+        inset: 0;
+        background: var(--sand);
+        z-index: 80;
+        transform: translateY(100%);
+        animation: cu 1s cubic-bezier(.7,0,.2,1) forwards;
+        pointer-events: none;
+    }
+
+    .bar {
+        height: 6px;
+        border-radius: 9px;
+        background: var(--line);
+        overflow: hidden;
+    }
+
+    .bar i {
+        display: block;
+        height: 100%;
+        background: var(--sand);
+        width: 0;
+        transition: width 1.4s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .hero-img {
+        filter: sepia(.3) saturate(.85) brightness(.78);
+        opacity: .62;
+        -webkit-mask-image: linear-gradient(to bottom,#000 55%,transparent);
+        mask-image: linear-gradient(to bottom,#000 55%,transparent);
+    }
+
+    [data-theme=light] .hero-img {
+        filter: none;
+        opacity: .95;
+    }
+
+    .nl {
+        font-size: .74rem;
+        font-weight: 500;
+        color: var(--mut);
+        padding: .5rem .65rem;
+        border-radius: 8px;
+        transition: color .25s;
+        white-space: nowrap;
+    }
+
+    .nl:hover, .nl.on {
+        color: var(--sand);
+    }
+
+    .nl.on {
+        background: var(--bg2);
+    }
+
+    .cover {
+        aspect-ratio: 16/10;
+        border-radius: 10px;
+        background: linear-gradient(135deg,var(--bg2),rgba(216,201,163,.22));
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+    }
+
+    .cover img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .fl {
+        position: relative;
+        display: inline-block;
+        color: var(--fg);
+        font-size: .95rem;
+        transition: color .25s;
+    }
+
+    .fl:hover {
+        color: var(--sand);
+    }
+
+    .fl::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        height: 1px;
+        width: 100%;
+        background: var(--sand);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .4s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .fl:hover::after {
+        transform: scaleX(1);
+    }
+
+    .wm {
+        font-weight: 600;
+        letter-spacing: -.05em;
+        text-transform: uppercase;
+        line-height: .8;
+        white-space: nowrap;
+        font-size: 10.8vw;
+        height: .68em;
+        overflow: hidden;
+        text-align: center;
+        background: linear-gradient(to bottom,var(--sand) 30%,transparent 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        user-select: none;
+    }
+}
+
+/* Testimonials: the comment canvas, its pins and the little windows */
+@layer components {
+    .canvas {
+        background-color: var(--bg2);
+        background-image: radial-gradient(var(--line) 1px, transparent 1.4px);
+        background-size: 22px 22px;
+    }
+
+    .canvas.is-comment {
+        cursor: crosshair;
+    }
+
+    /* The sharp corner of the pin sits exactly on the spot that was clicked. */
+    .pin {
+        position: absolute;
+        z-index: 5;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        transform: translate(0, -100%);
+        border-radius: 50% 50% 50% 0;
+        border: 2px solid var(--bg);
+        background: var(--sand);
+        color: var(--bg);
+        font-size: .7rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
+        animation: pop .5s cubic-bezier(.2,.9,.3,1.3) both;
+        transition: scale .2s;
+    }
+
+    .pin:hover,
+    .pin.on {
+        scale: 1.14;
+        z-index: 15;
+    }
+
+    .pin:focus-visible {
+        outline: 2px solid var(--fg);
+        outline-offset: 3px;
+    }
+
+    .pin.draft {
+        background: var(--bg);
+        color: var(--sand);
+        border: 2px dashed var(--sand);
+        animation: none;
+        cursor: default;
+    }
+
+    .av {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        background: var(--sand);
+        color: var(--bg);
+        font-size: .7rem;
+        font-weight: 700;
+    }
+
+    .pop {
+        position: absolute;
+        z-index: 20;
+        width: min(290px, 78%);
+        padding: 1rem;
+        border-radius: 14px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        box-shadow: 0 24px 50px -20px rgba(0,0,0,.65);
+        animation: popin .25s cubic-bezier(.2,.7,.2,1) both;
+    }
+}
+
+@keyframes pop {
+    from {
+        opacity: 0;
+        scale: .4;
+    }
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes popin {
+    from {
+        opacity: 0;
+        translate: 0 6px;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes pg {
+    from {
+        opacity: 0;
+        transform: translateY(34px);
+        filter: blur(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@keyframes cu {
+    0% {
+        transform: translateY(100%);
+    }
+    45%, 55% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+@media print {
+    .np {
+        display: none!important;
+    }
+    body::before {
+        display: none;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    * {
+        animation-duration: .01ms!important;
+        transition-duration: .01ms!important;
+    }
+}
